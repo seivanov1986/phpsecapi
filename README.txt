@@ -1,0 +1,1 @@
+curl -b cookiefile -c cookiefile -d [] http://localhost/user/list
