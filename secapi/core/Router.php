@@ -4,21 +4,40 @@ namespace secapi\core;
 
 use secapi\database\MySql;
 
+/**
+ * Class Router
+ * @package secapi\core
+ */
 class Router
 {
 
+    /**
+     * @var array
+     */
     private $config = [];
 
+    /**
+     * Router constructor.
+     */
     function __construct()
     {
     }
 
-    function setConfig($config) {
+    /**
+     * @param $config
+     * @return $this
+     */
+    function setConfig($config)
+    {
         $this->config = $config;
         return $this;
     }
 
-    function start() {
+    /**
+     *
+     */
+    function start()
+    {
 
         session_start();
 
@@ -34,14 +53,16 @@ class Router
         if (count($parse_request) == 1) {
             $controller_name = 'controllers\\PublicController';
             $action_name = 'action' . ucfirst($parse_request[0]);
-        } else {
+        }
+        else {
             $controller_name = 'controllers\\' . ucfirst($parse_request[0]) . 'Controller';
             $action_name = 'action' . ucfirst($parse_request[1]);
         }
 
         try {
             $controller = new $controller_name;
-        } catch(\Exception $e) {
+        }
+        catch(\Exception $e) {
             //print_r($e->getMessage());
         }
 
@@ -55,7 +76,8 @@ class Router
 
             if ($action) {
                 $controller->$action();
-            } else {
+            }
+            else {
                 $controller->actionIndex();
             }
 

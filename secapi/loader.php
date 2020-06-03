@@ -1,8 +1,15 @@
 <?php
 
+/**
+ * Class Loader
+ */
 class Loader {
 
-    public function __construct() {
+    /**
+     * Loader constructor.
+     */
+    public function __construct()
+    {
 
         spl_autoload_register(function ($class_name)
         {
@@ -13,7 +20,8 @@ class Loader {
 
             if(file_exists($file)) {
                 require($file);
-            } else {
+            }
+            else {
                 throw new \Exception("it's not allowed to load class: $class_name. >> " . $file);
             }
 

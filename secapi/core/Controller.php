@@ -2,47 +2,59 @@
 
 namespace secapi\core;
 
+/**
+ * Class Controller
+ * @package secapi\core
+ */
 class Controller
 {
 
+    /**
+     * Controller constructor.
+     */
     function __construct()
     {
 
         $this->receiveData();
-
-        /*
-        TODO:
-        1. function send data
-        1.1 generate password
-        1.2 crypt data by AES and password
-        1.3 crypt password by public_key
-        1.4 send data and password to server
-        */
-
-        /*
-        TODO:
-        1. function receive data
-        1.1 decrypt password
-        1.2 decrypt data by AES and password
-        */
-
         header('Content-type: application/json');
 
     }
 
-    function sendData() {
+    /**
+     *
+     */
+    function sendData()
+    {
 
     }
 
-    function receiveData() {
+    /**
+     *
+     */
+    function receiveData()
+    {
+
         $rawData = file_get_contents("php://input");
         $this->data = json_decode($rawData);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->data = new \StdClass();
+        }
+
     }
 
-    function decryptData() {
+    /**
+     *
+     */
+    function decryptData()
+    {
     }
 
-    function encryptData() {
+    /**
+     *
+     */
+    function encryptData()
+    {
 
         $password = $this->data->password;
         $body = $this->data->body;
@@ -54,6 +66,15 @@ class Controller
         $rsa->loadKey($privateKey, CRYPT_RSA_PRIVATE_FORMAT_PKCS1);
         $s = new \Math_BigInteger($password, 16);
         $pwd_decrypt = $rsa->decrypt($s->toBytes());
+
+        $iv = 'a1a2a3a4a5a6a7a8b1b2b3b4b5b6b7b8';
+        $key = hash('sha256', $pwd_decrypt);
+
+        $ivBytes = hex2bin($iv);
+        $keyBytes = hex2bin($key);
+        $ctBytes = base64_decode($body);
+
+        $decrypt = openssl_decrypt($ctBytes, "aes-256-cbc", $keyBytes, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $ivBytes);
 
     }
 

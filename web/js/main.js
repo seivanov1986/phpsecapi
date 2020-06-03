@@ -24,9 +24,24 @@ fetch("http://localhost/handShake", {
 document.addEventListener("DOMContentLoaded", function(){
     document.querySelector('#send').addEventListener('click', function(){
 
+        var password = '123456';
+        var message = 'My string - Could also be an JS array/object';
+
+        var iv = 'a1a2a3a4a5a6a7a8b1b2b3b4b5b6b7b8';
+        var key = CryptoJS.SHA256(password).toString();
+
+        var keyBytes = CryptoJS.enc.Hex.parse(key);
+        var ivBytes = CryptoJS.enc.Hex.parse(iv);
+
+        var encrypted_body = CryptoJS.AES.encrypt(message, keyBytes, {
+            iv: ivBytes,
+        }).ciphertext.toString(CryptoJS.enc.Base64);
+
+        console.log(encrypted_body);
+
         var data = {
-            password: rsa.encrypt('123456'),
-            body: ''
+            password: rsa.encrypt(password),
+            body: encrypted_body
         };
 
         fetch("http://localhost/test", {
@@ -43,36 +58,3 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     });
 });
-
-/*
-TODO:
-1. function send data
-1.1 generate password
-1.2 crypt data by AES and password
-1.3 crypt password by public_key
-1.4 send data and password to server
-*/
-
-/*
-TODO:
-1. function receive data
-1.1 decrypt password
-1.2 decrypt data by AES and password
-*/
-
-/*
-AES_Init();
-
-var block = new Array(16);
-for(var i = 0; i < 16; i++)
-    block[i] = 0x11 * i;
-
-var key = new Array(32);
-for(var i = 0; i < 32; i++)
-    key[i] = i;
-
-AES_ExpandKey(key);
-AES_Encrypt(block, key);
-
-AES_Done();
-*/

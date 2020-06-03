@@ -8,6 +8,7 @@ if (defined('DEBUG') && DEBUG === true) {
     ini_set('display_startup_errors', 1);
 }
 
+require_once('vendor/phpseclib/Crypt/AES.php');
 require_once('vendor/phpseclib/Crypt/RSA.php');
 require_once('vendor/phpseclib/Math/BigInteger.php');
 

@@ -4,10 +4,18 @@ namespace secapi\database;
 
 use secapi\database\Sql;
 
+/**
+ * Class MySql
+ * @package secapi\database
+ */
 class MySql extends Sql
 {
 
-    function connect($params = []) {
+    /**
+     * @param array $params
+     */
+    function connect($params = [])
+    {
 
         $host = isset($params['host']) ? $params['host'] : '';
         $user = isset($params['user']) ? $params['user'] : '';
@@ -24,34 +32,50 @@ class MySql extends Sql
                 //echo 'mysql error' . PHP_EOL;
             }
 
-        } catch(\Exception $e) {
+        }
+        catch(\Exception $e) {
             print_r($e->getMessage());
         }
 
     }
 
+    /**
+     * @return int|string
+     */
     function getLastId()
     {
         return mysqli_insert_id($this->link);
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     function query($query)
     {
 
         return $this->link->query($query);
     }
 
+    /**
+     * @param $query
+     * @return array
+     */
     function getQuery($query)
     {
         $result = $this->query($query);
         $array = array();
         if ($result) {
-            while ($row = $result->fetch_assoc())
+            while ($row = $result->fetch_assoc()) {
                 $array[] = $row;
+            }
         }
         return $array;
     }
 
+    /**
+     *
+     */
     function __destruct()
     {
         if ($this->link) {
